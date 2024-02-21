@@ -1,0 +1,113 @@
+#include "mainwindow.h"
+#include "./ui_mainwindow.h"
+#include <string>
+#include <map>
+#include <QRegularExpressionValidator>
+
+const std::string ss_2 = "01";
+const std::string ss_3 = "012";
+const std::string ss_4 = "0123";
+const std::string ss_5 = "01234";
+const std::string ss_6 = "012345";
+const std::string ss_7 = "0123456";
+const std::string ss_8 = "01234567";
+const std::string ss_9 = "012345678";
+const std::string ss_10 = "0123456789";
+const std::string ss_11 = "0123456789A";
+const std::string ss_12 = "0123456789AB";
+const std::string ss_13 = "0123456789ABC";
+const std::string ss_14 = "0123456789ABCD";
+const std::string ss_15 = "0123456789ABCDE";
+const std::string ss_16 = "0123456789ABCDEF";
+std::map<int, std::string> valid_symbols;
+
+
+MainWindow::MainWindow(QWidget *parent)
+    : QMainWindow(parent)
+    , ui(new Ui::MainWindow)
+{
+    ui->setupUi(this);
+    redactor = new Redactor(ui->number_input);
+    QAction *mainWindowAction = new QAction("converter", this);
+    QAction *historyWindowAction = new QAction("history", history);
+    QObject::connect(mainWindowAction, &QAction::triggered, [this]() {
+        this->centralWidget()->show();
+        this->ui->historyWidget->hide();
+    });
+    QObject::connect(historyWindowAction, &QAction::triggered, [this]() {
+        this->centralWidget()->hide();
+        this->ui->historyWidget->show();
+    });
+    ui->menubar->addAction(mainWindowAction);
+    ui->menubar->addAction(historyWindowAction);
+    redactor->setValidator(2);
+    connect(ui->button_1, SIGNAL(clicked()), this, SLOT(on_button_number_clicked()));
+    connect(ui->button_2, SIGNAL(clicked()), this, SLOT(on_button_number_clicked()));
+    connect(ui->button_3, SIGNAL(clicked()), this, SLOT(on_button_number_clicked()));
+    connect(ui->button_4, SIGNAL(clicked()), this, SLOT(on_button_number_clicked()));
+    connect(ui->button_5, SIGNAL(clicked()), this, SLOT(on_button_number_clicked()));
+    connect(ui->button_6, SIGNAL(clicked()), this, SLOT(on_button_number_clicked()));
+    connect(ui->button_7, SIGNAL(clicked()), this, SLOT(on_button_number_clicked()));
+    connect(ui->button_8, SIGNAL(clicked()), this, SLOT(on_button_number_clicked()));
+    connect(ui->button_9, SIGNAL(clicked()), this, SLOT(on_button_number_clicked()));
+    connect(ui->button_0, SIGNAL(clicked()), this, SLOT(on_button_number_clicked()));
+    connect(ui->button_A, SIGNAL(clicked()), this, SLOT(on_button_number_clicked()));
+    connect(ui->button_B, SIGNAL(clicked()), this, SLOT(on_button_number_clicked()));
+    connect(ui->button_C, SIGNAL(clicked()), this, SLOT(on_button_number_clicked()));
+    connect(ui->button_D, SIGNAL(clicked()), this, SLOT(on_button_number_clicked()));
+    connect(ui->button_E, SIGNAL(clicked()), this, SLOT(on_button_number_clicked()));
+    connect(ui->button_F, SIGNAL(clicked()), this, SLOT(on_button_number_clicked()));
+
+}
+
+MainWindow::~MainWindow()
+{
+    delete ui;
+    delete history;
+    delete redactor;
+}
+
+
+
+
+void MainWindow::on_button_convert_clicked()
+{
+    int input_ss = ui->input_ss->value();
+    int output_ss = ui->output_ss->value();
+    std::string number = ui->number_input->text().toStdString();
+    Converter converter(number, input_ss, output_ss);
+    QString res = QString::fromStdString(converter.Convert());
+    ui->result_label->setText(res);
+
+}
+
+void MainWindow::on_button_number_clicked() {
+    QPushButton* buttonSender = qobject_cast<QPushButton*>(sender());
+    auto val = ui->input_ss->value();
+    std::string text = buttonSender->text().toStdString();
+    if (redactor->can_type(text[0], val)) ui->number_input->setText(ui->number_input->text() + buttonSender->text());
+}
+
+void MainWindow::on_input_ss_valueChanged(int arg1)
+{
+    redactor->setValidator(arg1);
+    std::string number = ui->number_input->text().toStdString();
+    converter.set_input_number(number);
+    auto text = converter.Convert(arg1);
+    ui->number_input->setText(QString::fromStdString(text));
+}
+
+
+void MainWindow::on_button_backspace_clicked()
+{
+    auto text = ui->number_input->text().toStdString();
+    text.pop_back();
+    ui->number_input->setText(QString::fromStdString(text));
+}
+
+
+void MainWindow::on_pushButton_clicked()
+{
+    ui->number_input->setText("");
+}
+
