@@ -95,7 +95,7 @@ void MainWindow::on_button_backspace_clicked()
 }
 
 
-void MainWindow::on_pushButton_clicked()
+void MainWindow::on_clear_button_clicked()
 {
     redactor->setText("");
 }

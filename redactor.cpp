@@ -16,6 +16,7 @@ const std::string ss_13 = "0123456789ABC";
 const std::string ss_14 = "0123456789ABCD";
 const std::string ss_15 = "0123456789ABCDE";
 const std::string ss_16 = "0123456789ABCDEF";
+
 std::map<int, std::string> valid_symbols;
 
 Redactor::Redactor(QLineEdit *ptr) : input(ptr)
